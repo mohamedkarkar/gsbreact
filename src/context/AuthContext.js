@@ -1,26 +1,38 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import {signIn, logout, getCurrentUser, getAuthToken} from '../services/authServices';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children}) { 
     const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    const loginUser = (login, password) => {
-        if (login === "Andre" && password === "secret") {
-      setUser(login);
-      return true; 
-    } else {
-      return false;
-    }
+    useEffect(() => {
+        const user = getCurrentUser();
+        const token = getAuthToken();
+        if (user && token) {
+            setUser(user);
+            setToken(token);
+        }
+        setLoading(false);
+    }, []);
 
+    const loginUser = async (login, password) => {
+        const data = await signIn(login, password);
+        setUser(data.visiteur);
+        setToken(data.access_token);
+        return data;
     };
 
     const logoutUser = () => {
+        logout();
         setUser(null);
+        setToken(null);
     };
 
     return (
-        <AuthContext.Provider value={{user, loginUser, logoutUser }}>
+        <AuthContext.Provider value={{user, token, loading, loginUser, logoutUser}}>
             {children}
         </AuthContext.Provider>
         );

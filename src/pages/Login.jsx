@@ -8,13 +8,15 @@ export default function Login(){
     const [password, setPassword] = useState('');
     const {loginUser} = useAuth();
     const navigate = useNavigate();
-    const[error, setError]=useState('');
-    const handleSubmit = (e) => {
+    const[error] = useState('');
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (loginUser(login, password)) {
-            navigate('/dashboard');
-        }else {
-            setError('Identifiants incorrects');
+        try {
+            await loginUser(login, password);
+            navigate('/dashboard')
+        } catch (error) {
+            console.error('Erreur de connexion : ', error);
+            alert('Echec de la connexion');
         }
     };
 
@@ -26,7 +28,7 @@ export default function Login(){
                 <div>
                     <label>Login :</label>
                     <input
-                        type="text"
+                        name="login"
                         value={login}
                         onChange={(e) => setLogin(e.target.value)}
                         required
@@ -37,6 +39,7 @@ export default function Login(){
                     <label>Mot de passe :</label>
                 <input
                     type="password"
+                    name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required

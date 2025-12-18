@@ -9,20 +9,33 @@ function Navbar() {
         <nav className="navbar">
             <div className="navbar-container">
                 <div className="navbar-links">
-                <span className="navbar-logo">GSB Frais</span>
-                <Link to="/" >Acceuil</Link>
-                {user && <Link to="/dashboard" >Tableau de bord</Link>}
+                    <span className="navbar-logo">GSB Frais</span>
+
+                    <Link to="/">Accueil</Link>
+
+                    {user && (
+                        <>
+                            <Link to="/dashboard">Tableau de bord</Link>
+                            <Link to="/frais/ajouter">Ajouter un frais</Link>
+                        </>
+                    )}
                 </div>
+
                 <div className="navbar-auth">
                     {user ? (
-                        <button onClick={logoutUser} style={{ color:'white', background:'none', border: 'none'}}>Déconnexion</button>
+                        <button 
+                            onClick={logoutUser}
+                            style={{ color: 'white', background: 'none', border: 'none' }}
+                        >
+                            Déconnexion
+                        </button>
                     ) : (
-                    <Link to="/login">Connexion</Link>
+                        <Link to="/login">Connexion</Link>
                     )}
-                    
-                 </div>   
+                </div>
             </div>
         </nav>
     );
 }
+
 export default Navbar;
